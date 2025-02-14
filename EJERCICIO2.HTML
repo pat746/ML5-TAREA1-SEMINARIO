@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reconocimiento de Imágenes</title>
+
+  <!-- CDN para Bootstrap -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- CDN para la gestión de objetos -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+
+  <!-- CDN para ML5.js -->
+  <script src="https://cdn.jsdelivr.net/npm/ml5@0.12/dist/ml5.min.js"></script>
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+      color: #333;
+      font-family: Arial, sans-serif;
+      padding-top: 20px;
+    }
+
+    .container-custom {
+      max-width: 360px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .camera-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    #cameraCanvas {
+      border: 5px solid #ddd;
+      border-radius: 10px;
+    }
+
+    .label-container {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .object-label {
+      font-size: 16px;
+      margin: 5px 0;
+      font-weight: bold;
+    }
+
+    .confidence-bar-container {
+      width: 100%;
+      background-color: #e0e0e0;
+      border-radius: 10px;
+      margin-top: 5px;
+    }
+
+    .confidence-bar {
+      height: 10px;
+      border-radius: 10px;
+      background-color: #28a745;
+    }
+
+    .confidence-info {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    /* Estilo para un contenedor más responsivo */
+    @media (max-width: 768px) {
+      .container-custom {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container-custom">
+    <!-- Contenedor principal -->
+    <div class="row">
+      <!-- Contenedor de la cámara -->
+      <div class="col-12 camera-container">
+        <div id="cameraCanvas"></div>
+      </div>
+
+      <!-- Contenedor de etiquetas y barras de confianza -->
+      <div class="col-12 label-container" id="labels"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    let classifier;
+    let imageModelURL = "./model/";
+    let video;
+    let flippedVideo;
+    let labels = [];
+    let confidences = [];
+    let maxLabels = 3;  // Mostrar los 3 objetos más confiables
+
+    function preload() {
+      // Cargar el clasificador con el modelo preentrenado
+      classifier = ml5.imageClassifier(imageModelURL + "model.json");
+    }
+
+    function setup() {
+      // Crear el lienzo para la cámara
+      let canvas = createCanvas(320, 240);  // Tamaño del lienzo para la cámara
+      canvas.id("cameraCanvas");
+      // Capturar el video desde la cámara
+      video = createCapture(VIDEO);
+      video.size(320, 240);
+      video.hide();
+
+      flippedVideo = ml5.flipImage(video);
+      classifyVideo(); // Empezar a clasificar el video
+    }
+
+    function draw() {
+      background(0);  // Fondo negro
+      image(flippedVideo, 0, 0);  // Mostrar el video capturado
+
+      classifyVideo(); // Llamar a la clasificación continuamente
+    }
+
+    function classifyVideo() {
+      // Voltear la imagen para tener la orientación correcta
+      flippedVideo = ml5.flipImage(video);
+      // Realizar la clasificación de la imagen
+      classifier.classify(flippedVideo, gotResult);
+      flippedVideo.remove();  // Limpiar la imagen volcada después de clasificar
+    }
+
+    function gotResult(error, results) {
+      if (error) {
+        console.error(error);  // Si ocurre un error, mostrarlo
+        return;
+      }
+
+      // Limpiar las etiquetas y porcentajes anteriores
+      labels = [];
+      confidences = [];
+
+      // Obtener los resultados principales (hasta 3 objetos) según la confianza
+      for (let i = 0; i < Math.min(results.length, maxLabels); i++) {
+        labels.push(results[i].label);  // Almacenar el nombre del objeto
+        confidences.push(results[i].confidence);  // Almacenar la confianza en ese objeto
+      }
+
+      updateLabels();  // Actualizar las etiquetas y barras de confianza en la página
+      classifyVideo();  // Volver a clasificar el siguiente frame
+    }
+
+    function updateLabels() {
+      // Obtener el contenedor donde se mostrarán las etiquetas
+      let labelsDiv = document.getElementById('labels');
+      labelsDiv.innerHTML = '';  // Limpiar contenido previo
+
+      // Recorrer las etiquetas y mostrar cada una con su barra de confianza
+      labels.forEach((label, index) => {
+        let labelDiv = document.createElement('div');
+        labelDiv.classList.add('object-label');
+        labelDiv.innerHTML = label + " " + nf(confidences[index] * 100, 0, 2) + "%";
+
+        // Crear una barra de confianza para cada objeto
+        let confidenceBarContainer = document.createElement('div');
+        confidenceBarContainer.classList.add('confidence-bar-container');
+        let confidenceBar = document.createElement('div');
+        confidenceBar.classList.add('confidence-bar');
+        // Ajustar el ancho de la barra según la confianza
+        confidenceBar.style.width = (confidences[index] * 100) + '%';
+        confidenceBarContainer.appendChild(confidenceBar);
+
+        // Agregar la etiqueta y la barra al contenedor
+        labelsDiv.appendChild(labelDiv);
+        labelsDiv.appendChild(confidenceBarContainer);
+      });
+    }
+  </script>
+
+  <!-- Scripts de Bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
