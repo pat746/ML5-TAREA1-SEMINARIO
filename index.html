@@ -5,54 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Actividades</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             display: flex;
-            margin: 0;
             font-family: Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
         }
+
+        /* Sidebar */
         .sidebar {
-            width: 200px;
+            width: 250px;
             background: #2c3e50;
             color: white;
-            padding: 10px;
-            height: 100vh;
+            padding: 15px;
             position: fixed;
+            height: 100vh;
+            transition: transform 0.3s ease-in-out;
         }
-        .sidebar h2  {
+
+        .sidebar h2, .sidebar h5 {
             text-align: center;
+            margin-bottom: 15px;
         }
-        .sidebar h5 {
-          text-align: center;
-        }
+
         .sidebar a {
             display: block;
             color: white;
             text-decoration: none;
-            padding: 10px;
+            padding: 12px;
             margin: 5px 0;
             background: #34495e;
             border-radius: 5px;
             text-align: center;
+            transition: background 0.3s;
         }
+
         .sidebar a:hover {
             background: #1abc9c;
         }
-        .content {
-            margin-left: 230px;
-            padding: 10px ;
-            width: calc(100% - 270px);
-            height: 5px;
+
+        /* Contenedor principal */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            display: flex;
+            flex-direction: column;
+            width: calc(100% - 250px);
+            transition: margin-left 0.3s ease-in-out;
         }
+
+        /* Botón de menú para móviles */
+        .menu-btn {
+            display: none;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            font-size: 20px;
+            padding: 10px;
+            cursor: pointer;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 100;
+            border-radius: 5px;
+        }
+
+        /* Contenedor del iframe */
         .iframe-container {
             width: 100%;
             height: 100vh;
             border: none;
             background: #ecf0f1;
         }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 250px;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="sidebar">
+
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+    <div class="sidebar" id="sidebar">
         <h2>Actividades</h2>
         <h5>Patricia Ortiz Salvador</h5>
         <a href="#" onclick="cargarContenido('EJERCICIO1.HTML')">Ejercicio 1</a>
@@ -61,13 +119,20 @@
         <a href="#" onclick="cargarContenido('Turismo.html')">Ejercicio 4</a>
         <a href="#" onclick="cargarContenido('testmodel.html')">Ejercicio 5</a>
     </div>
-    <div class="content">
+
+    <div class="main-content">
         <iframe id="contenido" class="iframe-container"></iframe>
     </div>
+
     <script>
         function cargarContenido(archivo) {
             document.getElementById('contenido').src = archivo;
         }
+
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
     </script>
+
 </body>
 </html>
