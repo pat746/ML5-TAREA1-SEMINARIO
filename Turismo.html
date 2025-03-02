@@ -2,12 +2,16 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <title>Turismo Huacachina</title>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        body {
             background-image: url('./fondo.jpg');
             background-size: cover;
             background-position: center;
@@ -19,54 +23,121 @@
             color: white;
             text-align: center;
             font-family: Arial, sans-serif;
+            padding-top: 100px; /* Ajuste para navbar fijo */
         }
+
         .navbar {
             width: 100%;
-            position: absolute;
+            position: fixed;
             top: 0;
+            left: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 15px 0;
-           
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.7); /* Fondo semi-transparente */
+            z-index: 1000;
         }
+
         .navbar img {
-            height: 80px;
-            margin-right: 5px;
-            width: 80px;
+            height: 60px;
+            width: 60px;
+            margin-right: 10px;
         }
+
         .navbar h2 {
-            color: rgb(10, 10, 10);
+            color: white;
             margin: 0;
             font-size: 1.5em;
         }
+
         .container {
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             padding: 20px;
             border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
         }
+
         h1 {
-            font-size: 3em;
-            margin: 0;
+            font-size: 2.5em;
+            margin-bottom: 10px;
         }
+
+        p {
+            font-size: 1.2em;
+        }
+
         .buttons {
             margin-top: 20px;
         }
+
         .btn {
             padding: 10px 20px;
             font-size: 1.2em;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            transition: 0.3s ease-in-out;
         }
+
         .btn-primary {
             background-color: #ffcc00;
             color: black;
         }
+
         .btn-secondary {
             background-color: transparent;
             border: 2px solid white;
             color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            p {
+                font-size: 1em;
+            }
+
+            .navbar h2 {
+                font-size: 1.2em;
+            }
+
+            .navbar img {
+                height: 50px;
+                width: 50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .btn {
+                font-size: 1em;
+                padding: 8px 16px;
+            }
+
+            .navbar {
+                padding: 10px;
+            }
+
+            .navbar img {
+                height: 40px;
+                width: 40px;
+            }
+
+            .navbar h2 {
+                font-size: 1em;
+            }
         }
     </style>
 </head>
@@ -75,16 +146,18 @@
         <img src="logo.png" alt="Logo de la agencia">
         <h2>Oasis Adventure Tours</h2>
     </div>
+
     <div class="container">
         <h1>Bienvenido a Oasis Adventure Tours</h1>
         <p>El sitio web oficial del asombroso oasis en el desierto de Perú.</p>
     </div>
-       <!-- Integración del chatbot de Watson -->
-       <script>
+
+    <!-- Integración del chatbot de Watson -->
+    <script>
         window.watsonAssistantChatOptions = {
-          integrationID: "246a7c52-4027-4949-a8b4-d329b8a43037", // The ID of this integration.
-          region: "us-south", // The region your integration is hosted in.
-          serviceInstanceID: "1bd81a00-3dea-4746-aae6-dff750265a3d", // The ID of your service instance.
+          integrationID: "246a7c52-4027-4949-a8b4-d329b8a43037",
+          region: "us-south",
+          serviceInstanceID: "1bd81a00-3dea-4746-aae6-dff750265a3d",
           onLoad: async (instance) => { await instance.render(); }
         };
         setTimeout(function(){
@@ -93,6 +166,6 @@
           (window.watsonAssistantChatOptions.clientVersion || 'latest') + "/WatsonAssistantChatEntry.js";
           document.head.appendChild(t);
         });
-      </script>
+    </script>
 </body>
 </html>

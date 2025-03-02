@@ -127,6 +127,13 @@
     <script>
         function cargarContenido(archivo) {
             document.getElementById('contenido').src = archivo;
+
+            // Ocultar el sidebar si el archivo es EJERCICIO1.HTML
+            if (archivo === 'EJERCICIO1.HTML') {
+                document.getElementById('sidebar').style.display = "none";
+            } else {
+                document.getElementById('sidebar').style.display = "block";
+            }
         }
 
         function toggleMenu() {
