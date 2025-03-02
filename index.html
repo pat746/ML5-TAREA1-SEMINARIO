@@ -18,8 +18,11 @@
             height: 100vh;
             position: fixed;
         }
-        .sidebar h2 {
+        .sidebar h2  {
             text-align: center;
+        }
+        .sidebar h5 {
+          text-align: center;
         }
         .sidebar a {
             display: block;
@@ -36,12 +39,9 @@
         }
         .content {
             margin-left: 230px;
-           padding: 10px ;
+            padding: 10px ;
             width: calc(100% - 270px);
-            height: 20px;
-        }
-        .content h5{
-           text-align: center;
+            height: 5px;
         }
         .iframe-container {
             width: 100%;
@@ -54,6 +54,7 @@
 <body>
     <div class="sidebar">
         <h2>Actividades</h2>
+        <h5>Patricia Ortiz Salvador</h5>
         <a href="#" onclick="cargarContenido('EJERCICIO1.HTML')">Ejercicio 1</a>
         <a href="#" onclick="cargarContenido('EJERCICIO2.HTML')">Ejercicio 2</a>
         <a href="#" onclick="cargarContenido('EJERCICIO3.HTML')">Ejercicio 3</a>
@@ -61,7 +62,6 @@
         <a href="#" onclick="cargarContenido('testmodel.html')">Ejercicio 5</a>
     </div>
     <div class="content">
-        <h5>Bienvenido</h5>
         <iframe id="contenido" class="iframe-container"></iframe>
     </div>
     <script>
